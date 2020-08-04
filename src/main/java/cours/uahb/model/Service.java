@@ -38,8 +38,6 @@ public class Service
     @Override
     public String toString()
     {
-        return "Service{" +
-                "libelle='" + libelle + '\'' +
-                '}';
+        return libelle;
     }
 }
