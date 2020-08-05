@@ -7,7 +7,7 @@ import java.util.List;
 public class Service
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(length = 50)
     private String libelle;

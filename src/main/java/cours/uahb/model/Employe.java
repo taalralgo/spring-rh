@@ -6,7 +6,7 @@ import javax.persistence.*;
 public class Employe
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(length = 10)
     private String matricule;

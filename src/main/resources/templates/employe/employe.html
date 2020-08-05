@@ -1,15 +1,19 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" >
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Employe</title>
 
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css" integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+          integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous"/>
 </head>
 <body>
 
-<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<!--MODAL-->
+<div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+     aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -19,23 +23,33 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="post">
+                <form method="post" th:action="@{/employe/add}" th:object="${employe}" action="#">
+                    <div class="form-group">
+                        <label for="nom">Matricule</label>
+                        <input th:field="*{matricule}" type="text" class="form-control" id="matricule"
+                               aria-describedby="emailHelp" placeholder="Matricule">
+                    </div>
+                    <input th:field="*{id}" type="hidden" id="id">
                     <div class="form-group">
                         <label for="nom">Nom complet</label>
-                        <input type="text" class="form-control" id="nom" aria-describedby="emailHelp" placeholder="Nom complet">
+                        <input th:field="*{nomComplet}" type="text" class="form-control" id="nomComplet"
+                               aria-describedby="emailHelp" placeholder="Nom complet">
                     </div>
                     <div class="form-group">
                         <label for="poste">Poste</label>
-                        <input type="text" class="form-control" id="poste" placeholder="Poste de l'employé">
+                        <input th:field="*{poste}" type="text" class="form-control" id="poste"
+                               placeholder="Poste de l'employé">
                     </div>
                     <div class="form-group">
-                        <label for="salaire">Poste</label>
-                        <input type="text" class="form-control" id="salaire" placeholder="Salare de l'employé">
+                        <label for="salaire">Salaire</label>
+                        <input th:field="*{salaire}" type="number" class="form-control" id="salaire"
+                               placeholder="Salare de l'employé">
                     </div>
                     <div class="form-group">
                         <label for="service">Service(s)</label>
-                        <select class="form-control" id="service">
-                            <option th:each="service:${services}" th:value="${service.getId()}" th:text="${service}"></option>
+                        <select th:field="*{service.id}" class="form-control" id="service">
+                            <option th:each="service:${services}" th:value="${service.getId()}"
+                                    th:text="${service}"></option>
                         </select>
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -44,6 +58,7 @@
         </div>
     </div>
 </div>
+<!--END MODAL-->
 <div class="container" style="margin-top: 20px;">
     <h2>Liste des employés</h2>
     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal" style="margin: 20px;">
@@ -64,9 +79,18 @@
             <td th:text="${employe.nomComplet}">Nom complet</td>
             <td th:text="${employe.poste}">Poste</td>
             <td>
-                <a th:href="@{'/employe/show/' + ${employe.id}}" title="Voir" class="btn btn-info"><i class="fa fa-eye"></i></a>
-                <a href="#" title="Modifier" class="btn btn-warning"><i class="fa fa-edit"></i></a>
-                <a href="#" title="Supprimer" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                <a th:href="@{'/employe/show/' + ${employe.id}}" title="Voir" class="btn btn-info"><i
+                        class="fa fa-eye"></i></a>
+                <!--                <a href="#" title="Modifier" id="exampleModalLabel" class="btn btn-warning"></a>-->
+                <a
+                        th:data="${employe.id}"
+                        class="btn btn-primary btnEdit" href="#"
+                        role="button" data-toggle="modal" data-target="#addModal"><i class="fa fa-edit"></i></a>
+                <a
+                        th:data="${employe.id}"
+                        class="btn btn-primary btnRemove" href="#"
+                        role="button" data-toggle="modal"><i class="fa fa-trash"></i>
+                </a>
 
             </td>
         </tr>
@@ -75,9 +99,94 @@
 </div>
 
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+<script>
+    $(document).ready(function () {
+        $('.btnEdit').click(function () {
+            var id = $(this).attr('data')
+            console.log(id)
+            $.ajax({
+                url: '/employe/edit/' + id,
+                type: 'get',
+                dataType: 'json',
+                success: function (data) {
+                    $('#id').val(data.id)
+                    $('#matricule').val(data.matricule)
+                    $('#nomComplet').val(data.nomComplet)
+                    $('#poste').val(data.poste)
+                    $('#salaire').val(data.salaire)
+                    $('#service').val(data.service.id)
+                },
+                error: function (error) {
+                    console.error(error);
+                }
+            })
+        });
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+        $('.btnRemove').click(function () {
+        //
+            const swalWithBootstrapButtons = Swal.mixin({
+                customClass: {
+                    confirmButton: 'btn btn-success',
+                    cancelButton: 'btn btn-danger'
+                },
+                buttonsStyling: false
+            })
+
+            swalWithBootstrapButtons.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, cancel!',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.value) {
+                var id = $(this).attr('data')
+                $.ajax({
+                    url: '/employe/remove/' + id,
+                    type: 'get',
+                    success: function (data) {
+                        if(data.status === "success") {
+                            // swalWithBootstrapButtons.fire(
+                            //     'Deleted!',
+                            //     'La ligne a été supprimée avec succès.',
+                            //     'success'
+                            // )
+                            window.location.reload()
+                        }
+                        else {
+                            swalWithBootstrapButtons.fire(
+                                'Deleted!',
+                                'Erreur de suppression.',
+                                'error'
+                            )
+                        }
+
+                    },
+                    error: function (error) {
+                        console.error(error);
+                    }
+                })
+            } else if (
+                /* Read more about handling dismissals below */
+                result.dismiss === Swal.DismissReason.cancel
+            ) {
+                swalWithBootstrapButtons.fire(
+                    'Cancelled',
+                    'Your imaginary file is safe :)',
+                    'error'
+                )
+            }
+        })
+        //
+        });
+    })
+</script>
 </body>
 </html>
