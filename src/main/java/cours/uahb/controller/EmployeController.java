@@ -38,7 +38,7 @@ public class EmployeController
         try
         {
             Optional<Employe> employe = employeRepository.findById(Long.parseLong(id));
-            model.addAttribute("employe", employe.get());
+//            model.addAttribute("employe", employe.get());
             if (employe.isPresent())
             {
                 model.addAttribute("employe", employe.get());
