@@ -2,7 +2,9 @@
 <html
         lang="en"
         xmlns:th="http://www.thymeleaf.org"
-        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <!-- Meta, title, CSS, favicons, etc. -->
@@ -41,7 +43,7 @@
                     </div>
                     <div class="profile_info">
                         <span>Welcome,</span>
-                        <h2>John Doe</h2>
+                        <h2 sec:authentication="name">John Doe</h2>
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -54,9 +56,9 @@
                     <div class="menu_section">
                         <h3>General</h3>
                         <ul class="nav side-menu">
-                            <li><a><i class="fa fa-home"></i> Home <span class="fa fa-chevron-down"></span></a>
+                            <li><a><i class="fa fa-home"></i> Employe <span class="fa fa-chevron-down"></span></a>
                                 <ul class="nav child_menu">
-                                    <li><a href="index.html">Dashboard</a></li>
+                                    <li><a href="index.html" th:href="@{/employe}">Liste</a></li>
                                     <li><a href="index2.html">Dashboard2</a></li>
                                     <li><a href="index3.html">Dashboard3</a></li>
                                 </ul>
@@ -192,7 +194,8 @@
                                     <span>Settings</span>
                                 </a>
                                 <a class="dropdown-item"  href="javascript:;">Help</a>
-                                <a class="dropdown-item"  href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+                                <a onclick="getElementById('logout-form').submit();" class="dropdown-item"  href="login.html" th:href="@{/logout}"><i class="fa fa-sign-out pull-right"></i> Log Out</a>
+<!--                                <a class="dropdown-item"  href="login.html" th:href="@{/logout}"><i class="fa fa-sign-out pull-right"></i> Log Out</a>-->
                             </div>
                         </li>
 
