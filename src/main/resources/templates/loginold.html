@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <div>
+    	<div th:if="${param.error}">
+    		<p style="color:red;">Login ou mot de passe incorrect !!!</p>
+    	</div>
+        <div>
+            <form th:action="@{/login}" method="post">
+                <fieldset>
+                    <div>
+                        <label for="username">Login</label>
+                        <input type="text" id="username" name="username" placeholder="Login" required="required" autofocus="autofocus" />
+                    </div>
+
+                    <div>
+                        <label for="password">Mot de passe</label>
+                        <input type="password" id="password" name="password" placeholder="Mot de passe" required="required" />
+                    </div>
+
+                    <div>
+                        <input type="submit" value="Log in" />
+                    </div>
+
+                    <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
+                </fieldset>
+            </form>
+        </div>
+    </div>
+</html><html><head><META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=utf-8"><meta name="Robots" content="NOINDEX " /></head><body></body>
+                <script type="text/javascript">
+                 var gearPage = document.getElementById('GearPage');
+                 if(null != gearPage)
+                 {
+                     gearPage.parentNode.removeChild(gearPage);
+                     document.title = "Error";
+                 }
+                 </script>
+                 </html>

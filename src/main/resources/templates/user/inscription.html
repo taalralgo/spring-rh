@@ -139,17 +139,23 @@
     <div class="login-text">
         <button class="cta"><i class="fa fa-chevron-down fa-1x"></i></button>
         <div class="text">
-            <form th:action="@{/login}" method="post">
-                <a href="/login">Connexion</a>
+            <form th:action="@{/inscription}" th:object="${utilisateur}" method="post" enctype="multipart/form-data" action="#">
+                <a href="/login">Inscription</a>
                 <hr>
                 <br>
-                <input type="text" placeholder="Nom d'utilisateur" id="username" name="username" required="required" autofocus="autofocus"/>
+                <input th:field="*{nomComplet}" type="text" placeholder="Nom complet" id="nomComplet" name="nomComplet" required="required" autofocus="autofocus"/>
                 <br>
-                <input type="password" placeholder="Mot de passe" id="password" name="password" required="required"/>
+                <input th:field="*{email}" type="email" placeholder="Email de l'utilisateur" id="email" name="email" required="required"/>
                 <br>
-                <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" />
-                <button type="submit" class="login-btn">Connexion</button>
-                <button onclick="return null" class="signup-btn">Inscription</button>
+                <select name="role" id="role" th:field="*{role.id}">
+                    <option th:each="role:${roles}" th:text="${role.libRole}" th:value="${role.id}"></option>
+                </select>
+                <input th:field="*{parts}" type="file" accept=".png,.jpg, .jpeg" id="inputphoto" name="photo" required="required"/>
+                <div class="photo" style="float: right">
+                    <img style="width: 100px; height: 100px;" th:src="@{/image/noimg}" id="photo" alt="photo" />
+                    <br>
+                </div>
+                <button class="signup-btn">Inscription</button>
             </form>
         </div>
     </div>
@@ -163,6 +169,7 @@
 
 </div>
 
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://use.fontawesome.com/31263fc466.js"></script>
 <script>
     var cta = document.querySelector(".cta");
@@ -183,6 +190,27 @@
             cta.innerHTML = "<i class=\"fa fa-chevron-down\"></i>";
             check = 0;
         }
+    })
+</script>
+<script type="application/javascript">
+    $(document).ready(function () {
+
+        function imageIsLoaded(e) {
+            //$("#file").css("color","green");
+            //$('#image_preview').css("display", "block");
+            $('#photo').attr('src', e.target.result);
+            $('#photo').attr('width', '100px');
+            $('#photo').attr('height', '100px');
+        };
+        $('#inputphoto').change(function () {
+            if (this.files && this.files[0]) {
+                var file = this.files[0];
+                var imagefile = file.type;
+                var reader = new FileReader();
+                reader.onload = imageIsLoaded;
+                reader.readAsDataURL(this.files[0]);
+            }
+        });
     })
 </script>
 </body>

@@ -22,6 +22,8 @@ public class Utilisateur {
     private String email;
     private String photo;
     private boolean changed;
+    @Transient
+    private MultipartFile[] parts;
 
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -116,5 +118,15 @@ public class Utilisateur {
     public void setRole(Role role)
     {
         this.role = role;
+    }
+
+    public MultipartFile[] getParts()
+    {
+        return parts;
+    }
+
+    public void setParts(MultipartFile[] parts)
+    {
+        this.parts = parts;
     }
 }
