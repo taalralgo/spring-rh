@@ -146,6 +146,7 @@
                 <input th:field="*{nomComplet}" type="text" placeholder="Nom complet" id="nomComplet" name="nomComplet" required="required" autofocus="autofocus"/>
                 <br>
                 <input th:field="*{email}" type="email" placeholder="Email de l'utilisateur" id="email" name="email" required="required"/>
+                <input type="hidden" id="id" th:field="*{id}" name="id"/>
                 <br>
                 <select name="role" id="role" th:field="*{role.id}">
                     <option th:each="role:${roles}" th:text="${role.libRole}" th:value="${role.id}"></option>

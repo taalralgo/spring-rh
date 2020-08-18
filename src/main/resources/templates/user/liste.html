@@ -53,7 +53,12 @@
                     <img th:src="@{'/images/' + ${utilisateur.photo}}" alt="photo" style="width: 90px;height: 90px;">
                 </td>
                 <td>
-                    Action1 | Action2 | Action3
+                    <a th:href="@{/user/edit/{id}(id = ${utilisateur.id})}" class="btn btn-info">Editer</a> | <a th:href="@{/user/edit/{id}(id = ${utilisateur.id})}" class="btn btn-info">Editer</a> |
+                    <a
+                        th:data="${utilisateur.id}"
+                        class="btn btn-danger btnRemove" href="#"
+                        role="button" data-toggle="modal">Delete</i>
+                    </a>
                 </td>
             </tr>
             </tbody>
@@ -64,6 +69,69 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
     <script src="/js/app.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.btnRemove').click(function () {
+                //
+                const swalWithBootstrapButtons = Swal.mixin({
+                    customClass: {
+                        confirmButton: 'btn btn-success',
+                        cancelButton: 'btn btn-danger'
+                    },
+                    buttonsStyling: false
+                })
+
+                swalWithBootstrapButtons.fire({
+                    title: 'Are you sure?',
+                    text: "You won't be able to revert this!",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, delete it!',
+                    cancelButtonText: 'No, cancel!',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.value) {
+                        var id = $(this).attr('data')
+                        $.ajax({
+                            url: '/user/delete/' + id,
+                            type: 'get',
+                            success: function (data) {
+                                if(data.status === "success") {
+                                    // swalWithBootstrapButtons.fire(
+                                    //     'Deleted!',
+                                    //     'La ligne a été supprimée avec succès.',
+                                    //     'success'
+                                    // )
+                                    window.location.reload()
+                                }
+                                else {
+                                    swalWithBootstrapButtons.fire(
+                                        'Deleted!',
+                                        'Erreur de suppression.',
+                                        'error'
+                                    )
+                                }
+
+                            },
+                            error: function (error) {
+                                console.error(error);
+                            }
+                        })
+                    } else if (
+                        /* Read more about handling dismissals below */
+                        result.dismiss === Swal.DismissReason.cancel
+                    ) {
+                        swalWithBootstrapButtons.fire(
+                            'Cancelled',
+                            'Your imaginary file is safe :)',
+                            'error'
+                        )
+                    }
+                })
+                //
+            });
+        })
+    </script>
 </div>
 </body>
 </html>

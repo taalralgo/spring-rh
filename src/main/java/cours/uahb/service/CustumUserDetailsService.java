@@ -27,26 +27,27 @@ public class CustumUserDetailsService implements UserDetailsService{
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		// TODO Auto-generated method stub
 		Utilisateur user = userDAO.findByLogin(username);
-		if(user != null)
-		{
-			List roles = new ArrayList();
-			roles.add(user.getRole());
-			 User u = new User(user.getLogin(),user.getPwd(),
-					 true,true,true,true,getAuthorities(roles));
-			 return u ;
-		}
+//		if(user != null)
+//		{
+//			List roles = new ArrayList();
+//			roles.add(user.getRole());
+//			 User u = new User(user.getLogin(),user.getPwd(),
+//					 true,true,true,true,getAuthorities(roles));
+//			 return u ;
+//		}
 		
-		return null;
+//		return null;
+		return user;
 	}
 	
-	private Collection getAuthorities(List roles) {
-		List authorities = new ArrayList();
-		for(Object role : roles)
-		{
-			Role l = (Role)role;
-			authorities.add(new SimpleGrantedAuthority(l.getLibRole()));
-		}
-		return authorities ;
-	}
+//	private Collection getAuthorities(List roles) {
+//		List authorities = new ArrayList();
+//		for(Object role : roles)
+//		{
+//			Role l = (Role)role;
+//			authorities.add(new SimpleGrantedAuthority(l.getLibRole()));
+//		}
+//		return authorities ;
+//	}
 
 }

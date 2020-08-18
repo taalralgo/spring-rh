@@ -1,10 +1,14 @@
 package cours.uahb.controller;
 
+import com.sun.org.apache.xpath.internal.operations.Mod;
+import cours.uahb.model.Response;
 import cours.uahb.model.Role;
 import cours.uahb.model.Utilisateur;
 import cours.uahb.repository.IRole;
 import cours.uahb.repository.IUtilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -18,6 +22,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Optional;
 
 @Controller
 public class InscriptionController
@@ -50,6 +55,7 @@ public class InscriptionController
         return "user/liste";
     }
 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @PostMapping("/inscription")
     public String save(@ModelAttribute("utilisateur") Utilisateur utilisateur) throws Exception
     {
@@ -150,5 +156,28 @@ public class InscriptionController
         }
         return "redirect:/simple";
 
+    }
+
+    @GetMapping("/user/edit/{id}")
+    public String edit(@PathVariable Integer id, Model model)
+    {
+        Optional<Utilisateur> user = utilisateurRepository.findById(id);
+        if(!user.isPresent()) {
+            return "redirect:/user/liste";
+        }
+        model.addAttribute("roles", roleRepository.findAll());
+        model.addAttribute("utilisateur", user.get());
+        return "user/inscription";
+    }
+
+    @GetMapping("/user/delete/{id}")
+    public @ResponseBody ResponseEntity<?> delete(@PathVariable Integer id)
+    {
+        Optional<Utilisateur> user = utilisateurRepository.findById(id);
+        if(!user.isPresent()) {
+            return ResponseEntity.ok(new Response("error"));
+        }
+        utilisateurRepository.delete(user.get());
+        return ResponseEntity.ok(new Response("success"));
     }
 }
