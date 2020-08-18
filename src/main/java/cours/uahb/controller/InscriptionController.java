@@ -5,6 +5,9 @@ import cours.uahb.model.Utilisateur;
 import cours.uahb.repository.IRole;
 import cours.uahb.repository.IUtilisateur;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +28,8 @@ public class InscriptionController
     private IRole roleRepository;
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    private Utilisateur connectedUser;
 
     @GetMapping("/inscription")
     public String inscription(Model model)
@@ -90,5 +95,60 @@ public class InscriptionController
             ex.printStackTrace();
         }
         return null;
+    }
+
+    @GetMapping("/user/changepassword")
+    public String changepassword(Model model)
+    {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        connectedUser = utilisateurRepository.findByLogin(user.getUsername());
+        model.addAttribute("utilisateur", connectedUser);
+        return "user/changepassword";
+    }
+
+    @PostMapping("/user/changepassword")
+    public String resetpassword(@RequestParam(name = "oldpassword") String oldpassword,
+                                @RequestParam(name = "password") String password,
+                                @RequestParam(name = "confirmation") String confirmation,
+                                Model model)
+    {
+        String error = "";
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = (User) auth.getPrincipal();
+        connectedUser = utilisateurRepository.findByLogin(user.getUsername());
+        if(password.length() < 7) {
+            error+= "Le mot de passe doit faire au moins 7 caracteres.";
+            model.addAttribute("erreur",error);
+            model.addAttribute("utilisateur", connectedUser);
+            return "user/changepassword";
+        }
+//        if(!connectedUser.getPwd().equals(bCryptPasswordEncoder.encode(oldpassword))) {
+//            error+= "L'ancien mot de passe est incorrect.";
+//            model.addAttribute("erreur",error);
+//            model.addAttribute("utilisateur", connectedUser);
+//            return "user/changepassword";
+//        }
+        if(password.equals(oldpassword)) {
+            error+= "L'ancien mot de passe et le nouveau mot de passe doit etre different.";
+            model.addAttribute("erreur",error);
+            model.addAttribute("utilisateur", connectedUser);
+            return "user/changepassword";
+        }
+        if(!password.equals(confirmation)) {
+            error+= "La confirmation ne correspond pas au mot de passe.";
+            model.addAttribute("erreur",error);
+            model.addAttribute("utilisateur", connectedUser);
+            return "user/changepassword";
+        }
+
+        connectedUser.setPwd(bCryptPasswordEncoder.encode(password));
+        connectedUser.setChanged(true);
+        utilisateurRepository.save(connectedUser);
+        if(connectedUser.getRole().getLibRole().equals("ROLE_ADMIN")) {
+            return "redirect:/admin";
+        }
+        return "redirect:/simple";
+
     }
 }

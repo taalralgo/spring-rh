@@ -43,7 +43,7 @@
                     </div>
                     <div class="profile_info">
                         <span>Welcome,</span>
-                        <h2 sec:authentication="name">John Doe</h2>
+                        <h2 sec:authentication="name" th:text="${connectedUser.nomComplet}"></h2>
                     </div>
                     <div class="clearfix"></div>
                 </div>

@@ -30,6 +30,8 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 
   private RedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
 
+  private Utilisateur u;
+
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, 
     HttpServletResponse response, Authentication authentication)
@@ -45,12 +47,14 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
 
       String targetUrl = determineTargetUrl(authentication);
 
+      request.getSession().setAttribute("connectedUser", u);
       if (response.isCommitted()) {
           logger.debug(
             "Response has already been committed. Unable to redirect to "
             + targetUrl);
           return;
       }
+
 
       redirectStrategy.sendRedirect(request, response, targetUrl);
   }
@@ -96,7 +100,11 @@ public class MySimpleUrlAuthenticationSuccessHandler implements AuthenticationSu
       Utils.setToken(token);
       System.out.println("Token :"+token);
 
-//      Utilisateur u = iUtilisateur.findByLogin(utils.getConnectedUser());
+      u = iUtilisateur.findByLogin(utils.getConnectedUser());
+      if(!u.isChanged())
+      {
+          return "user/changepassword";
+      }
       if (isAdmin) {
           return "admin";
       }

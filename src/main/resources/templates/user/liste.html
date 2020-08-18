@@ -40,7 +40,6 @@
                 <th>Login</th>
                 <th>Etat</th>
                 <th>Photo</th>
-                <th>Text upload</th>
                 <th>Actions</th>
             </tr>
             </thead>
@@ -51,9 +50,8 @@
                 <td th:text="${utilisateur.login}">Poste</td>
                 <td th:text="${utilisateur.changed}">Poste</td>
                 <td>
-                    <img th:src="@{${uploads+''+utilisateur.photo}}" alt="photo" style="width: 90px;height: 90px;">
+                    <img th:src="@{'/images/' + ${utilisateur.photo}}" alt="photo" style="width: 90px;height: 90px;">
                 </td>
-                <td th:text="${uploads+''+utilisateur.photo}"></td>
                 <td>
                     Action1 | Action2 | Action3
                 </td>
